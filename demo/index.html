@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>html-editor demo · 立即试</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; margin: 0; background: #f5f5f7; color: #1d1d1f; }
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+  .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 40px 32px; border-radius: 12px; margin-bottom: 24px; }
+  .header h1 { margin: 0 0 8px; font-size: 32px; }
+  .header .subtitle { opacity: 0.9; font-size: 15px; }
+  .section { background: white; padding: 24px 28px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .section h2 { margin: 0 0 16px; font-size: 20px; color: #1d1d1f; border-left: 4px solid #667eea; padding-left: 12px; }
+  .kpi-row { display: flex; gap: 16px; }
+  .kpi { flex: 1; background: #f9f9fb; padding: 20px; border-radius: 8px; text-align: center; }
+  .kpi .num { font-size: 28px; font-weight: 600; color: #667eea; }
+  .kpi .label { font-size: 13px; color: #86868b; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e5ea; font-size: 14px; }
+  th { background: #f9f9fb; font-weight: 600; color: #424245; }
+  ul { padding-left: 20px; line-height: 1.8; }
+  .chart-wrap { height: 260px; }
+  .footer { text-align: center; color: #86868b; font-size: 13px; padding: 20px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #e8f5e9; color: #2e7d32; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>html-editor 演示报告</h1>
+    <div class="subtitle">装完 skill 后立即试这份 · 拖动区块、改文字、换字体、换图、撤销重做全都能玩</div>
+  </div>
+
+  <div class="section">
+    <h2>一、核心指标</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="num">1,234</div><div class="label">总订单数</div></div>
+      <div class="kpi"><div class="num">98.6%</div><div class="label">成功率</div></div>
+      <div class="kpi"><div class="num">42ms</div><div class="label">平均耗时</div></div>
+      <div class="kpi"><div class="num">7</div><div class="label">异常告警</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>二、趋势图（Chart.js · 拖动后自动 resize）</h2>
+    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+  </div>
+
+  <div class="section">
+    <h2>三、明细表格（每个单元格都可编辑）</h2>
+    <table>
+      <thead>
+        <tr><th>日期</th><th>渠道</th><th>订单数</th><th>状态</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2026-09-20</td><td>淘宝</td><td>312</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-20</td><td>天猫</td><td>287</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-21</td><td>淘宝</td><td>298</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-21</td><td>京东</td><td>156</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-22</td><td>拼多多</td><td>89</td><td><span class="badge">正常</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>四、要点清单（试试拖拽换位）</h2>
+    <ul>
+      <li>鼠标悬到本区块右上角，出现 ⠿ 手柄，按住拖到别处即可换位</li>
+      <li>Alt + 点击区块 = 选中，顶栏出现 ↑ ↓ 复制 删除 换图 按钮</li>
+      <li>点任何一段文字直接改，跟 Word 一样</li>
+      <li>选中一段文字，顶栏出格式化条：字体 / 字号 / 颜色 / 加粗 / 斜体 / 链接</li>
+      <li>⌘/Ctrl + Z 撤销，⌘/Ctrl + Shift + Z 重做</li>
+      <li>改完点顶栏「⬇ 导出 HTML」下载干净版本（剥掉所有编辑器痕迹）</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>五、图片区（点 🖼 换图，自动 base64 内联）</h2>
+    <p style="text-align:center; color:#86868b; padding: 40px; background:#f9f9fb; border-radius:8px;">
+      这里原本可以放一张图。选中本区块后点顶栏 🖼 按钮，选本地图片替换，<br>
+      编辑器会自动转 base64 内联，导出后不依赖任何外链。
+    </p>
+  </div>
+
+  <div class="footer">
+    html-editor v1.2.0 · MIT License · 演示用样本，随便改
+  </div>
+
+</div>
+
+<script>
+// Chart.js 趋势图（编辑器会自动捕获 config，拖动/撤销后重建）
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: ['09-16','09-17','09-18','09-19','09-20','09-21','09-22'],
+    datasets: [{
+      label: '日订单数',
+      data: [245, 312, 287, 356, 298, 412, 389],
+      borderColor: '#667eea',
+      backgroundColor: 'rgba(102,126,234,0.1)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: { y: { beginAtZero: false } }
+  }
+});
+</script>
+
+<!-- ===== html-editor 注入层（导出时自动剥离） ===== -->
+<script id="__he_config__" data-he-ui>window.__HE__ = {"filename": "demo.html", "autoStart": true};</script>
+<script id="__he_script__" data-he-ui>
+/*!
+ * html-editor · editor.js  (v1.0.0)
+ * 一个自包含、无框架、无构建的「可视化 HTML 编辑器」内核。
+ *
+ * 设计目标：
+ *  - 输入普适：不写死任何 class，靠结构语义识别可拖拽「区块」与可编辑「文本」。
+ *  - 运行普适：无外部依赖，file:// 双击即可运行，也能被任意 agent 注入。
+ *  - 导出干净：所有编辑器 UI / 属性用 data-he-ui 命名空间标记，导出时整段剥离，
+ *    产出的 HTML 与「从未被编辑过」在结构上一致（只多了用户真实改动的内联样式/文本）。
+ *
+ * 暴露 window.__htmlEditor 供 agent 自动化与验收测试调用：
+ *   .exportCleanHTML() -> string   返回剥离后的完整 HTML（含 <!DOCTYPE html>）
+ *   .download()                    触发浏览器下载干净 HTML
+ *   .saveInPlace()                 若支持 File System Access API 则覆盖保存
+ *   .enterEdit() / .exitEdit()     切换编辑 / 预览
+ *   .selectBlock(el) / .getBlocks()
+ *   .applyTextStyle(prop, value)   对当前选区或聚焦文本元素施加内联样式
+ *   .moveBlock(el, beforeEl)       把 el 移动到 beforeEl 之前（同父）
+ *   .undo() / .redo()
+ *   ._charts                       捕获到的 Chart.js 配置（调试用）
+ */
+(function () {
+  'use strict';
+
+  var CFG = window.__HE__ || {};
+  var FILENAME = CFG.filename || (document.title ? document.title.replace(/[\\/:*?"<>|]+/g, '_') + '.html' : 'edited.html');
+
+  // ---------- 常量 ----------
+  var UI_ATTR = 'data-he-ui';                 // 所有编辑器 UI 元素的标记（导出时删除）
+  var ROOT_ID = '__he_root__';                // 编辑器 UI 根节点 id
+  var STYLE_ID = '__he_style__';
+  var INLINE_TAGS = { B:1, STRONG:1, I:1, EM:1, U:1, S:1, STRIKE:1, SPAN:1, A:1, CODE:1, KBD:1,
+    MARK:1, SMALL:1, SUB:1, SUP:1, BR:1, ABBR:1, CITE:1, Q:1, TIME:1, LABEL:1, FONT:1, WBR:1, BDI:1, BDO:1, RUBY:1 };
+  var CONTAINER_TAGS = { UL:1, OL:1, TABLE:1, THEAD:1, TBODY:1, TFOOT:1, TR:1, DL:1, FIGURE:1 };
+  var TEXT_SELECTOR = 'h1,h2,h3,h4,h5,h6,p,li,td,th,dt,dd,blockquote,figcaption,caption,summary,div,span,a,code,pre,label';
+  var FONT_OPTIONS = [
+    ['', '默认（跟随页面）'],
+    ["-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif", '系统无衬线'],
+    ["'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif", '苹方 / 雅黑'],
+    ["'Songti SC', 'SimSun', 'Source Han Serif SC', serif", '宋体（衬线）'],
+    ["'Heiti SC', 'SimHei', 'Source Han Sans SC', sans-serif", '黑体'],
+    ["Georgia, 'Times New Roman', serif", 'Georgia / Times'],
+    ["'Times New Roman', Times, serif", 'Times New Roman'],
+    ["Arial, Helvetica, sans-serif", 'Arial'],
+    ["'Courier New', Courier, monospace", 'Courier New（等宽）'],
+    ["'Trebuchet MS', sans-serif", 'Trebuchet']
+  ];
+
+  // ---------- 状态 ----------
+  var rootContainer = null;
+  var editMode = false;
+  var activeEditable = null;   // 当前聚焦的可编辑文本元素
+  var selectedBlock = null;    // 当前选中的结构区块
+  var undoStack = [];
+  var redoStack = [];
+  var typingSession = false;
+  var pendingSnapshot = null;
+  var typeTimer = null;
+  var charts = [];             // [{id, config}] 捕获的 Chart.js 实例配置
+
+  // ---------- 工具 ----------
+  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function $all(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
+  function isUI(el) { return el && el.closest && el.closest('[' + UI_ATTR + ']'); }
+
+  function meaningfulKids(el) {
+    return $all('*', el).filter(function (c) {
+      return c.parentElement === el && !isUI(c) && c.tagName !== 'SCRIPT' && c.tagName !== 'STYLE';
+    });
+  }
+
+  function detectRoot() {
+    // 1) 明确的单一 wrapper（有 >=2 个子块才认，避免误选窄容器）
+    var sels = ['.container', 'main', '#main', '.wrapper', '#app', '#root', '.page', '.content'];
+    for (var i = 0; i < sels.length; i++) {
+      var c = $(sels[i]);
+      if (c && c !== document.body && meaningfulKids(c).length >= 2) return c;
+    }
+    // 2) body 下恰好一个有意义的子 wrapper（单 wrapper 页面）
+    var kids = meaningfulKids(document.body);
+    if (kids.length === 1 && meaningfulKids(kids[0]).length >= 2) return kids[0];
+    // 3) 否则直接用 body：所有顶层块都可拖拽、全部文本可编辑
+    return document.body;
+  }
+
+  function isContainer(el) {
+    if (!el) return false;
+    if (el === rootContainer) return true;
+    if (CONTAINER_TAGS[el.tagName]) return true;
+    var d = '';
+    try { d = getComputedStyle(el).display; } catch (e) { return false; }
+    return d === 'flex' || d === 'inline-flex' || d === 'grid' || d === 'inline-grid';
+  }
+
+  // 从一个元素向上找它所属的「区块」= 最近的、其父是容器的祖先
+  function findBlock(el) {
+    if (!el || el === document.body || el === document.documentElement) return null;
+    if (isUI(el)) return null;
+    var node = el;
+    while (node && node.parentElement) {
+      var p = node.parentElement;
+      if (isUI(p)) return null;
+      if (isContainer(p)) return node;
+      if (p === document.body) return null;
+      node = p;
+    }
+    return null;
+  }
+
+  function siblingsOf(el) {
+    if (!el || !el.parentElement) return [];
+    return $all('*', el.parentElement).filter(function (c) {
+      return !isUI(c) && c.tagName !== 'SCRIPT' && c.tagName !== 'STYLE' && c.tagName !== 'TEMPLATE';
+    });
+  }
+
+  // 元素是否为「可编辑文本」：有文本，且所有元素子节点都是行内标签
+  function isTextEditable(el) {
+    if (isUI(el)) return false;
+    var t = el.tagName;
+    if (t === 'SCRIPT' || t === 'STYLE' || t === 'CANVAS' || t === 'SVG' || t === 'IMG' ||
+        t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT' || t === 'BUTTON' || t === 'IFRAME' || t === 'VIDEO') return false;
+    var kids = $all('*', el);
+    for (var i = 0; i < kids.length; i++) {
+      if (!INLINE_TAGS[kids[i].tagName]) return false;
+    }
+    var txt = (el.textContent || '').trim();
+    return txt.length > 0;
+  }
+
+  // ---------- 图表捕获 / 重绘 ----------
+  function captureCharts() {
+    charts = [];
+    if (!window.Chart) return;
+    var canvases = $all('canvas');
+    canvases.forEach(function (cv) {
+      try {
+        var inst = window.Chart.getChart ? window.Chart.getChart(cv) : null;
+        if (!inst) return;
+        if (!cv.id) cv.id = 'he_canvas_' + Math.random().toString(36).slice(2, 8);
+        charts.push({ id: cv.id, config: inst.config });
+      } catch (e) { /* 忽略无法捕获的图表 */ }
+    });
+  }
+
+  function restoreCharts() {
+    if (!window.Chart || !charts.length) { resizeCharts(); return; }
+    charts.forEach(function (c) {
+      try {
+        var cv = document.getElementById(c.id);
+        if (!cv) return;
+        var existing = window.Chart.getChart ? window.Chart.getChart(cv) : null;
+        if (existing) { existing.resize(); return; }
+        new window.Chart(cv, c.config);
+      } catch (e) { /* 单个图表失败不影响整体 */ }
+    });
+  }
+
+  function resizeCharts() {
+    if (!window.Chart) return;
+    $all('canvas').forEach(function (cv) {
+      try { var inst = window.Chart.getChart && window.Chart.getChart(cv); if (inst) inst.resize(); } catch (e) {}
+    });
+  }
+
+  // ---------- 撤销 / 重做 ----------
+  function stripMarkers(root) {
+    $all('[contenteditable]', root).forEach(function (n) { n.removeAttribute('contenteditable'); });
+    $all('[data-he-text]', root).forEach(function (n) { n.removeAttribute('data-he-text'); });
+    $all('[data-he-spell]', root).forEach(function (n) { n.removeAttribute('spellcheck'); n.removeAttribute('data-he-spell'); });
+    $all('.he-selected,.he-hover,.he-dragging,.he-drop-before,.he-drop-after,.he-bodypad,.he-ghost,.he-placeholder', root).forEach(function (n) {
+      n.classList.remove('he-selected', 'he-hover', 'he-dragging', 'he-drop-before', 'he-drop-after', 'he-bodypad', 'he-ghost', 'he-placeholder');
+    });
+    if (root.classList) root.classList.remove('he-selected', 'he-hover', 'he-dragging', 'he-bodypad', 'he-ghost', 'he-placeholder');
+    $all('[class=""]', root).forEach(function (n) { n.removeAttribute('class'); });
+  }
+
+  function cleanBodyHTML() {
+    var b = document.body.cloneNode(true);
+    $all('[' + UI_ATTR + ']', b).forEach(function (n) { n.remove(); });
+    stripMarkers(b);
+    return b.innerHTML;
+  }
+
+  function pushState(html) {
+    undoStack.push(html || cleanBodyHTML());
+    if (undoStack.length > 60) undoStack.shift();
+    redoStack.length = 0;
+    updateUndoButtons();
+  }
+
+  function restoreBody(html) {
+    var root = document.getElementById(ROOT_ID);
+    Array.prototype.slice.call(document.body.childNodes).forEach(function (n) {
+      if (n !== root) document.body.removeChild(n);
+    });
+    root.insertAdjacentHTML('beforebegin', html);
+    // 快照替换会丢弃 boot 时缓存的根容器（已脱离文档），必须重新探测，
+    // 否则 getRoot()/findBlock()/拖拽 都会作用在死节点上。
+    rootContainer = detectRoot();
+    hoverBlock = null;
+    applyEditable();
+    restoreCharts();
+    updateUndoButtons();
+  }
+
+  function undo() {
+    if (!undoStack.length) return;
+    redoStack.push(cleanBodyHTML());
+    restoreBody(undoStack.pop());
+    selectedBlock = null; hideBlockBar();
+  }
+  function redo() {
+    if (!redoStack.length) return;
+    undoStack.push(cleanBodyHTML());
+    restoreBody(redoStack.pop());
+    selectedBlock = null; hideBlockBar();
+  }
+  function updateUndoButtons() {
+    var u = $('#he_undo'), r = $('#he_redo');
+    if (u) u.disabled = !undoStack.length;
+    if (r) r.disabled = !redoStack.length;
+  }
+
+  // ---------- 可编辑文本 ----------
+  function applyEditable() {
+    if (!editMode) return;
+    $all(TEXT_SELECTOR, rootContainer).forEach(function (el) {
+      if (isUI(el)) return;
+      if (isTextEditable(el)) {
+        if (el.getAttribute('contenteditable') !== 'true') {
+          el.setAttribute('contenteditable', 'true');
+          el.setAttribute('data-he-text', '1');
+          el.setAttribute('spellcheck', 'false');
+          el.setAttribute('data-he-spell', '1');
+        }
+      }
+    });
+  }
+
+  function clearEditable() {
+    $all('[data-he-text]').forEach(function (el) {
+      el.removeAttribute('contenteditable');
+      el.removeAttribute('data-he-text');
+      el.removeAttribute('spellcheck');
+      el.removeAttribute('data-he-spell');
+    });
+  }
+
+  // ---------- 导出 ----------
+  function exportCleanHTML() {
+    var doc = document.documentElement.cloneNode(true);
+    $all('[' + UI_ATTR + ']', doc).forEach(function (n) { n.remove(); });
+    stripMarkers(doc);
+    // captureCharts 给无 id 的 canvas 赋的合成 id（he_canvas_*）只用于快照重建，
+    // 导出这份是一次性克隆，剥掉它以保证零残留；不动 stripMarkers（撤销快照仍需该 id）。
+    $all('canvas[id^="he_canvas_"]', doc).forEach(function (n) { n.removeAttribute('id'); });
+    // 清理可能残留的空 class / 空白
+    $all('[class=""]', doc).forEach(function (n) { n.removeAttribute('class'); });
+    return '<!DOCTYPE html>\n' + doc.outerHTML;
+  }
+
+  function download() {
+    var html = exportCleanHTML();
+    var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = FILENAME; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 1500);
+    toast('已导出干净 HTML：' + FILENAME);
+  }
+
+  function saveInPlace() {
+    if (!('showSaveFilePicker' in window)) { download(); return; }
+    var html = exportCleanHTML();
+    window.showSaveFilePicker({ suggestedName: FILENAME, types: [{ description: 'HTML', accept: { 'text/html': ['.html'] } }] })
+      .then(function (handle) { return handle.createWritable(); })
+      .then(function (w) { return w.write(html).then(function () { return w.close(); }); })
+      .then(function () { toast('已覆盖保存到本地文件'); })
+      .catch(function (e) { if (e && e.name !== 'AbortError') toast('保存失败，已改为下载'); download(); });
+  }
+
+  // ---------- 文本样式 ----------
+  function getActiveTextEl() {
+    var sel = window.getSelection && window.getSelection();
+    if (sel && sel.anchorNode) {
+      var n = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentElement : sel.anchorNode;
+      var ed = n && n.closest ? n.closest('[data-he-text]') : null;
+      if (ed) return ed;
+    }
+    return activeEditable;
+  }
+
+  function applyTextStyle(prop, value) {
+    if (!editMode) return false;
+    var sel = window.getSelection && window.getSelection();
+    var hasSel = sel && !sel.isCollapsed && sel.rangeCount && getActiveTextEl();
+    pushState();
+    if (hasSel) {
+      try {
+        var range = sel.getRangeAt(0);
+        var span = document.createElement('span');
+        span.style[prop] = value;
+        try { range.surroundContents(span); }
+        catch (e) { var frag = range.extractContents(); span.appendChild(frag); range.insertNode(span); }
+        // 重新选中新 span，方便连续调整
+        var ns = document.createRange(); ns.selectNodeContents(span);
+        sel.removeAllRanges(); sel.addRange(ns);
+      } catch (e) {
+        var el0 = getActiveTextEl(); if (el0) el0.style[prop] = value;
+      }
+    } else {
+      var el = getActiveTextEl();
+      if (!el) { toast('请先点选要改的文字或区块'); undoStack.pop(); return false; }
+      if (value === '' || value == null) el.style.removeProperty(prop);
+      else el.style[prop] = value;
+    }
+    return true;
+  }
+
+  function execInline(cmd, val) {
+    if (!editMode) return;
+    var el = getActiveTextEl();
+    if (!el) { toast('请先点进一段文字'); return; }
+    pushState();
+    try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
+    el.focus();
+    try { document.execCommand(cmd, false, val || null); } catch (e) {}
+  }
+
+  function makeLink() {
+    var sel = window.getSelection && window.getSelection();
+    if (!sel || sel.isCollapsed) { toast('请先选中要加链接的文字'); return; }
+    var url = window.prompt('输入链接地址（https://…）：', 'https://');
+    if (!url) return;
+    pushState();
+    try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
+    try { document.execCommand('createLink', false, url); } catch (e) {}
+    $all('a[href="' + url + '"]', rootContainer).forEach(function (a) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); });
+  }
+
+  // ---------- 区块操作 ----------
+  function selectBlock(el) {
+    if (selectedBlock) selectedBlock.classList.remove('he-selected');
+    selectedBlock = el;
+    if (el) { el.classList.add('he-selected'); showBlockBar(el); }
+    else hideBlockBar();
+  }
+
+  function duplicateBlock() {
+    if (!selectedBlock) return;
+    pushState();
+    var clone = selectedBlock.cloneNode(true);
+    clone.classList.remove('he-selected');
+    // 清空文本为占位，保留结构与样式
+    $all('*', clone).forEach(function (n) {
+      if (isTextEditable(n)) { /* 保留结构，文本置占位 */ }
+    });
+    blankText(clone);
+    selectedBlock.insertAdjacentElement('afterend', clone);
+    applyEditable();
+    selectBlock(clone);
+    toast('已复制区块（文本已置为占位，点进去改）');
+  }
+
+  function blankText(el) {
+    var seen = false;
+    $all('*', el).concat([el]).forEach(function (n) {
+      if (isTextEditable(n) && !seen) {
+        // 只清最内层文本叶子的直接文本
+        Array.prototype.slice.call(n.childNodes).forEach(function (c) {
+          if (c.nodeType === 3 && c.textContent.trim()) { c.textContent = '新内容'; seen = true; }
+        });
+      }
+    });
+    if (!seen) { /* 容器型区块：把每个可编辑叶子置占位 */
+      $all(TEXT_SELECTOR, el).forEach(function (n) {
+        if (isTextEditable(n)) n.textContent = '新内容';
+      });
+    }
+  }
+
+  function deleteBlock() {
+    if (!selectedBlock) return;
+    if (!window.confirm('确认删除这个区块？（可用 Ctrl+Z 撤销）')) return;
+    pushState();
+    var p = selectedBlock.parentElement;
+    selectedBlock.remove();
+    selectedBlock = null; hideBlockBar();
+    if (p) restoreCharts();
+    toast('已删除区块');
+  }
+
+  function addBlockBelow() {
+    if (!selectedBlock) return;
+    pushState();
+    var clone = selectedBlock.cloneNode(true);
+    clone.classList.remove('he-selected');
+    blankText(clone);
+    // 克隆里如果含 canvas，去掉以免 id 重复
+    $all('canvas', clone).forEach(function (c) { c.remove(); });
+    selectedBlock.insertAdjacentElement('afterend', clone);
+    applyEditable();
+    selectBlock(clone);
+    toast('已在下方新增同类区块');
+  }
+
+  function replaceImage() {
+    var scope = selectedBlock || activeEditable;
+    var img = scope ? (scope.tagName === 'IMG' ? scope : $('img', scope)) : null;
+    if (!img) { toast('这个区块里没有图片'); return; }
+    var input = $('#he_fileimg');
+    input.onchange = function () {
+      var f = input.files && input.files[0];
+      if (!f) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        pushState();
+        img.src = reader.result;   // base64 内联，导出后自包含
+        toast('图片已替换（已内联为 base64）');
+      };
+      reader.readAsDataURL(f);
+      input.value = '';
+    };
+    input.click();
+  }
+
+  function moveBlock(el, beforeEl) {
+    if (!el || !el.parentElement) return;
+    var parent = el.parentElement;
+    if (beforeEl && beforeEl.parentElement === parent) parent.insertBefore(el, beforeEl);
+    else parent.appendChild(el);
+  }
+
+  // ---------- 拖拽排序（指针事件，仅通过手柄触发，不干扰文字选择） ----------
+  var drag = null;
+  function startDrag(e, block) {
+    if (!block) return;
+    e.preventDefault();
+    pushState();
+    var rect = block.getBoundingClientRect();
+    var ph = document.createElement('div');
+    ph.className = 'he-placeholder'; ph.setAttribute(UI_ATTR, '1');
+    ph.style.height = Math.max(rect.height, 8) + 'px';
+    block.parentNode.insertBefore(ph, block);
+
+    var ghost = block.cloneNode(true);
+    ghost.classList.add('he-ghost'); ghost.setAttribute(UI_ATTR, '1');
+    ghost.style.width = rect.width + 'px';
+    document.body.appendChild(ghost);
+
+    block.style.display = 'none';
+    drag = { block: block, ph: ph, ghost: ghost, offX: e.clientX - rect.left, offY: e.clientY - rect.top };
+    moveGhost(e);
+    document.addEventListener('pointermove', onDragMove);
+    document.addEventListener('pointerup', endDrag);
+  }
+  function moveGhost(e) {
+    if (!drag) return;
+    drag.ghost.style.left = (e.clientX - drag.offX) + 'px';
+    drag.ghost.style.top = (e.clientY - drag.offY) + 'px';
+  }
+  function onDragMove(e) {
+    if (!drag) return;
+    moveGhost(e);
+    drag.ghost.style.display = 'none';
+    var under = document.elementFromPoint(e.clientX, e.clientY);
+    drag.ghost.style.display = '';
+    var target = findBlock(under);
+    var parent = drag.block.parentElement;
+    if (!target || target === drag.block || target.parentElement !== parent) return;
+    var r = target.getBoundingClientRect();
+    var after = (e.clientY > r.top + r.height / 2);
+    if (after) target.insertAdjacentElement('afterend', drag.ph);
+    else target.insertAdjacentElement('beforebegin', drag.ph);
+  }
+  function endDrag() {
+    if (!drag) return;
+    document.removeEventListener('pointermove', onDragMove);
+    document.removeEventListener('pointerup', endDrag);
+    drag.ph.parentNode.insertBefore(drag.block, drag.ph);
+    drag.block.style.display = '';
+    drag.ph.remove(); drag.ghost.remove();
+    var b = drag.block; drag = null;
+    selectBlock(b);
+    restoreCharts();
+    toast('区块已移动');
+  }
+
+  // ---------- UI 构建 ----------
+  function injectStyle() {
+    if (document.getElementById(STYLE_ID)) return;
+    var css = [
+      '#' + ROOT_ID + '{position:fixed;z-index:2147483000;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}',
+      '#' + ROOT_ID + ' *{box-sizing:border-box;}',
+      '.he-topbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:8px;padding:0 14px;background:#1f2937;color:#e5e7eb;box-shadow:0 2px 12px rgba(0,0,0,.25);flex-wrap:nowrap;overflow-x:auto;}',
+      '.he-topbar .he-brand{font-weight:700;color:#fff;white-space:nowrap;margin-right:4px;}',
+      '.he-topbar .he-sep{width:1px;height:26px;background:#4b5563;margin:0 4px;flex:0 0 auto;}',
+      '.he-btn{background:#374151;color:#e5e7eb;border:1px solid #4b5563;border-radius:7px;height:32px;padding:0 10px;cursor:pointer;font-size:13px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}',
+      '.he-btn:hover:not(:disabled){background:#4b5563;}',
+      '.he-btn:disabled{opacity:.4;cursor:not-allowed;}',
+      '.he-btn.he-primary{background:#2563eb;border-color:#2563eb;color:#fff;}',
+      '.he-btn.he-primary:hover{background:#1d4ed8;}',
+      '.he-btn.he-icon{width:32px;padding:0;justify-content:center;font-weight:700;}',
+      '.he-sel,.he-inp{height:32px;border-radius:7px;border:1px solid #4b5563;background:#111827;color:#e5e7eb;padding:0 8px;font-size:13px;}',
+      '.he-inp.he-size{width:62px;}',
+      '.he-color{width:32px;height:32px;padding:2px;border-radius:7px;border:1px solid #4b5563;background:#111827;cursor:pointer;}',
+      '.he-spacer{flex:1 1 auto;min-width:8px;}',
+      '.he-bodypad{padding-top:60px !important;}',
+      /* 区块视觉反馈（作用在真实内容上，用 class，导出会清除） */
+      '.he-hover{outline:2px dashed rgba(37,99,235,.5) !important;outline-offset:2px;cursor:default;}',
+      '.he-selected{outline:2px solid #2563eb !important;outline-offset:2px;}',
+      '.he-ghost{position:fixed !important;z-index:2147483001;opacity:.92;pointer-events:none;box-shadow:0 12px 32px rgba(0,0,0,.35);border-radius:8px;background:#fff;}',
+      '.he-placeholder{background:rgba(37,99,235,.14);border:2px dashed #2563eb;border-radius:8px;margin:6px 0;}',
+      '[contenteditable="true"]:focus{outline:2px solid rgba(16,185,129,.6) !important;outline-offset:1px;background:rgba(16,185,129,.05);border-radius:3px;}',
+      /* 悬浮手柄 + 区块工具条 */
+      '.he-handle{position:fixed;width:26px;height:26px;border-radius:7px;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;cursor:grab;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.3);user-select:none;}',
+      '.he-handle:active{cursor:grabbing;}',
+      '.he-blockbar{position:fixed;display:flex;gap:4px;background:#1f2937;border:1px solid #374151;border-radius:9px;padding:4px;box-shadow:0 6px 20px rgba(0,0,0,.3);}',
+      '.he-blockbar .he-btn{height:28px;padding:0 9px;font-size:12px;}',
+      '.he-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .2s;pointer-events:none;}',
+      '.he-toast.he-show{opacity:.96;}',
+      '.he-hint{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#111827cc;color:#fff;padding:8px 16px;border-radius:999px;font-size:12px;}',
+      '@media print{#' + ROOT_ID + '{display:none !important;}}'
+    ].join('\n');
+    var st = document.createElement('style');
+    st.id = STYLE_ID; st.setAttribute(UI_ATTR, '1'); st.textContent = css;
+    document.head.appendChild(st);
+  }
+
+  function buildUI() {
+    if (document.getElementById(ROOT_ID)) return;
+    var root = document.createElement('div');
+    root.id = ROOT_ID; root.setAttribute(UI_ATTR, '1');
+
+    // 顶栏
+    var bar = document.createElement('div');
+    bar.className = 'he-topbar';
+    bar.innerHTML =
+      '<span class="he-brand">✎ HTML 编辑器</span>' +
+      '<span class="he-sep"></span>' +
+      '<button class="he-btn he-icon" id="he_bold" title="加粗 (Ctrl+B)"><b>B</b></button>' +
+      '<button class="he-btn he-icon" id="he_italic" title="斜体 (Ctrl+I)"><i>I</i></button>' +
+      '<button class="he-btn he-icon" id="he_under" title="下划线 (Ctrl+U)"><u>U</u></button>' +
+      '<button class="he-btn he-icon" id="he_link" title="插入链接">🔗</button>' +
+      '<input type="color" class="he-color" id="he_color" title="文字颜色（选中文字后生效）" value="#2563eb">' +
+      '<span class="he-sep"></span>' +
+      '<select class="he-sel" id="he_font" title="字体（作用于点选的文本元素/选中文字）"></select>' +
+      '<button class="he-btn he-icon" id="he_dec" title="减小字号">A−</button>' +
+      '<input class="he-inp he-size" id="he_size" type="number" min="8" max="120" step="1" title="字号(px)">' +
+      '<button class="he-btn he-icon" id="he_inc" title="增大字号">A＋</button>' +
+      '<span class="he-sep"></span>' +
+      '<button class="he-btn" id="he_undo" title="撤销 (Ctrl+Z)">↶ 撤销</button>' +
+      '<button class="he-btn" id="he_redo" title="重做 (Ctrl+Shift+Z)">↷ 重做</button>' +
+      '<span class="he-spacer"></span>' +
+      '<button class="he-btn" id="he_preview" title="切换到预览（隐藏编辑框）">👁 预览</button>' +
+      ('showSaveFilePicker' in window ? '<button class="he-btn" id="he_save" title="覆盖保存到本地文件">💾 保存</button>' : '') +
+      '<button class="he-btn he-primary" id="he_export" title="导出剥离编辑器的干净 HTML">⬇ 导出 HTML</button>';
+    root.appendChild(bar);
+
+    // 字体下拉
+    var fontSel = $('#he_font', bar);
+    FONT_OPTIONS.forEach(function (o) {
+      var op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; fontSel.appendChild(op);
+    });
+
+    // 悬浮拖拽手柄 + 区块工具条 + 图片文件输入 + toast
+    var handle = document.createElement('div');
+    handle.className = 'he-handle'; handle.setAttribute(UI_ATTR, '1'); handle.textContent = '⠿';
+    handle.title = '按住拖动可排序；单击选中区块'; handle.style.display = 'none';
+    root.appendChild(handle);
+
+    var bbar = document.createElement('div');
+    bbar.className = 'he-blockbar'; bbar.setAttribute(UI_ATTR, '1'); bbar.style.display = 'none';
+    bbar.innerHTML =
+      '<button class="he-btn" data-act="up" title="上移">↑</button>' +
+      '<button class="he-btn" data-act="down" title="下移">↓</button>' +
+      '<button class="he-btn" data-act="dup" title="复制区块">⧉ 复制</button>' +
+      '<button class="he-btn" data-act="add" title="下方新增同类区块">＋ 新增</button>' +
+      '<button class="he-btn" data-act="img" title="替换本区块图片">🖼 换图</button>' +
+      '<button class="he-btn" data-act="del" title="删除区块" style="background:#7f1d1d;border-color:#991b1b;">🗑 删除</button>';
+    root.appendChild(bbar);
+
+    var fi = document.createElement('input');
+    fi.type = 'file'; fi.id = 'he_fileimg'; fi.accept = 'image/*'; fi.setAttribute(UI_ATTR, '1'); fi.style.display = 'none';
+    root.appendChild(fi);
+
+    var toastEl = document.createElement('div');
+    toastEl.className = 'he-toast'; toastEl.setAttribute(UI_ATTR, '1'); toastEl.id = 'he_toast';
+    root.appendChild(toastEl);
+
+    document.body.appendChild(root);
+    wireUI(bar, handle, bbar);
+  }
+
+  function wireUI(bar, handle, bbar) {
+    $('#he_bold').onclick = function () { execInline('bold'); };
+    $('#he_italic').onclick = function () { execInline('italic'); };
+    $('#he_under').onclick = function () { execInline('underline'); };
+    $('#he_link').onclick = makeLink;
+    $('#he_color').oninput = function (e) { applyTextStyle('color', e.target.value); };
+    $('#he_font').onchange = function (e) { applyTextStyle('fontFamily', e.target.value); syncSizeFont(); };
+    $('#he_size').onchange = function (e) { applyTextStyle('fontSize', e.target.value + 'px'); };
+    $('#he_inc').onclick = function () { bumpSize(1); };
+    $('#he_dec').onclick = function () { bumpSize(-1); };
+    $('#he_undo').onclick = undo;
+    $('#he_redo').onclick = redo;
+    $('#he_export').onclick = download;
+    if ($('#he_save')) $('#he_save').onclick = saveInPlace;
+    $('#he_preview').onclick = function () { editMode ? exitEdit() : enterEdit(); };
+
+    // 区块工具条按钮
+    bbar.addEventListener('click', function (e) {
+      var btn = e.target.closest('.he-btn'); if (!btn) return;
+      var act = btn.getAttribute('data-act');
+      if (act === 'dup') duplicateBlock();
+      else if (act === 'add') addBlockBelow();
+      else if (act === 'del') deleteBlock();
+      else if (act === 'img') replaceImage();
+      else if (act === 'up' || act === 'down') nudgeBlock(act === 'up' ? -1 : 1);
+    });
+
+    // 手柄：单击选中，按住拖动
+    handle.addEventListener('pointerdown', function (e) {
+      var b = handle.__block; if (!b) return;
+      selectBlock(b);
+      startDrag(e, b);
+    });
+  }
+
+  function bumpSize(d) {
+    var el = getActiveTextEl();
+    var cur = el ? parseFloat(getComputedStyle(el).fontSize) : 16;
+    var next = Math.max(8, Math.min(120, Math.round(cur + d)));
+    $('#he_size').value = next;
+    applyTextStyle('fontSize', next + 'px');
+  }
+
+  function nudgeBlock(dir) {
+    if (!selectedBlock) return;
+    var sibs = siblingsOf(selectedBlock);
+    var i = sibs.indexOf(selectedBlock);
+    var j = i + dir;
+    if (j < 0 || j >= sibs.length) return;
+    pushState();
+    if (dir < 0) selectedBlock.parentElement.insertBefore(selectedBlock, sibs[j]);
+    else selectedBlock.parentElement.insertBefore(sibs[j], selectedBlock);
+    restoreCharts();
+    positionBlockUI(selectedBlock);
+  }
+
+  // 同步顶栏字号/字体显示为当前聚焦点
+  function syncSizeFont() {
+    var el = getActiveTextEl(); if (!el) return;
+    var cs = getComputedStyle(el);
+    var sz = Math.round(parseFloat(cs.fontSize));
+    if ($('#he_size') && document.activeElement !== $('#he_size')) $('#he_size').value = sz;
+  }
+
+  // ---------- 悬浮手柄 / 区块工具条 定位 ----------
+  var hoverBlock = null;
+  function positionBlockUI(block) {
+    var handle = $('.he-handle'), bbar = $('.he-blockbar');
+    if (!block || !editMode) { handle.style.display = 'none'; return; }
+    var r = block.getBoundingClientRect();
+    if (r.bottom < 60 || r.top > window.innerHeight) { handle.style.display = 'none'; if (selectedBlock !== block) bbar.style.display = 'none'; return; }
+    handle.style.display = 'flex';
+    handle.style.left = Math.max(4, r.left - 32) + 'px';
+    handle.style.top = (r.top + 4) + 'px';
+    handle.__block = block;
+    if (selectedBlock === block) {
+      bbar.style.display = 'flex';
+      var bw = bbar.offsetWidth || 320;
+      bbar.style.left = Math.min(Math.max(8, r.left), window.innerWidth - bw - 8) + 'px';
+      bbar.style.top = Math.max(58, r.top - 42) + 'px';
+    }
+  }
+  function hideBlockBar() { var b = $('.he-blockbar'); if (b) b.style.display = 'none'; var h = $('.he-handle'); if (h) h.style.display = 'none'; }
+  function showBlockBar(block) { positionBlockUI(block); }
+
+  // ---------- toast ----------
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $('#he_toast'); if (!t) return;
+    t.textContent = msg; t.classList.add('he-show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('he-show'); }, 2200);
+  }
+
+  // ---------- 全局事件（委托） ----------
+  function wireEvents() {
+    document.addEventListener('mouseover', function (e) {
+      if (!editMode || drag) return;
+      if (isUI(e.target)) return;
+      var b = findBlock(e.target);
+      if (b !== hoverBlock) {
+        if (hoverBlock) hoverBlock.classList.remove('he-hover');
+        hoverBlock = b;
+        if (hoverBlock) { hoverBlock.classList.add('he-hover'); positionBlockUI(hoverBlock); }
+        else { $('.he-handle').style.display = 'none'; }
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!editMode) return;
+      if (isUI(e.target)) return;
+      // 点击区块手柄区域由手柄自己处理；这里处理"选中区块"
+      if (e.altKey) { // Alt+点击 = 选中区块（避免和文字编辑冲突）
+        var b = findBlock(e.target);
+        if (b) { e.preventDefault(); selectBlock(b); }
+      }
+    });
+
+    document.addEventListener('focusin', function (e) {
+      if (!editMode) return;
+      if (e.target.hasAttribute && e.target.hasAttribute('data-he-text')) {
+        activeEditable = e.target; syncSizeFont();
+      }
+    });
+
+    document.addEventListener('input', function (e) {
+      if (!editMode) return;
+      var t = e.target;
+      if (!(t.hasAttribute && t.hasAttribute('data-he-text'))) return;
+      if (!typingSession) {
+        if (pendingSnapshot != null) pushState(pendingSnapshot);
+        typingSession = true;
+      }
+      clearTimeout(typeTimer);
+      typeTimer = setTimeout(function () { typingSession = false; }, 1400);
+    });
+
+    // 每次聚焦可编辑元素前，记录一份"编辑前"快照，供本次输入分组撤销
+    document.addEventListener('focusin', function (e) {
+      if (e.target.hasAttribute && e.target.hasAttribute('data-he-text')) {
+        pendingSnapshot = cleanBodyHTML();
+        typingSession = false;
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      var mod = e.ctrlKey || e.metaKey;
+      if (!mod) return;
+      var k = e.key.toLowerCase();
+      if (k === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+      else if ((k === 'z' && e.shiftKey) || k === 'y') { e.preventDefault(); redo(); }
+      else if (k === 's') { e.preventDefault(); ('showSaveFilePicker' in window) ? saveInPlace() : download(); }
+      else if (k === 'b' && editMode && getActiveTextEl()) { e.preventDefault(); execInline('bold'); }
+      else if (k === 'i' && editMode && getActiveTextEl()) { e.preventDefault(); execInline('italic'); }
+      else if (k === 'u' && editMode && getActiveTextEl()) { e.preventDefault(); execInline('underline'); }
+    });
+
+    window.addEventListener('scroll', function () { if (hoverBlock) positionBlockUI(hoverBlock); if (selectedBlock) positionBlockUI(selectedBlock); }, { passive: true });
+    window.addEventListener('resize', function () { if (selectedBlock) positionBlockUI(selectedBlock); resizeCharts(); });
+  }
+
+  // ---------- 进入 / 退出编辑 ----------
+  function enterEdit() {
+    editMode = true;
+    document.body.classList.add('he-bodypad');
+    applyEditable();
+    $('#he_preview').textContent = '👁 预览';
+    toast('编辑模式：点文字直接改；Alt+点区块或点⠿手柄选中；拖手柄排序');
+  }
+  function exitEdit() {
+    editMode = false;
+    clearEditable();
+    document.body.classList.remove('he-bodypad');
+    if (selectedBlock) selectedBlock.classList.remove('he-selected');
+    selectedBlock = null;
+    if (hoverBlock) hoverBlock.classList.remove('he-hover');
+    hoverBlock = null;
+    hideBlockBar();
+    $('#he_preview').textContent = '✎ 编辑';
+    toast('预览模式（改动已保留，导出即得干净 HTML）');
+  }
+
+  // ---------- 启动 ----------
+  function boot() {
+    rootContainer = detectRoot();
+    injectStyle();
+    buildUI();
+    wireEvents();
+    captureCharts();
+    updateUndoButtons();
+    if (CFG.autoStart !== false) enterEdit();
+    // 兜底：内容/图表可能在编辑器 boot 之后才渲染（window.onload、解压内嵌数据、setTimeout）。
+    // resync 重新探测根容器、重挂 contenteditable、重捕图表；幂等且轻量。
+    function resync() {
+      var prev = rootContainer;
+      rootContainer = detectRoot();
+      if (editMode) applyEditable();
+      captureCharts();
+      restoreCharts();
+      if (prev !== rootContainer) { selectedBlock = null; hoverBlock = null; hideBlockBar(); }
+    }
+    window.addEventListener('load', resync);
+    setTimeout(resync, 400);
+    setTimeout(resync, 1500);
+  }
+
+  window.__htmlEditor = {
+    version: '1.3.0',
+    exportCleanHTML: exportCleanHTML,
+    download: download,
+    saveInPlace: saveInPlace,
+    enterEdit: enterEdit,
+    exitEdit: exitEdit,
+    selectBlock: selectBlock,
+    getBlocks: function () { return siblingsOf(rootContainer.firstElementChild || rootContainer).length ? $all('*', rootContainer).filter(function (el) { return el.parentElement === rootContainer && !isUI(el) && el.tagName !== 'SCRIPT'; }) : []; },
+    getRoot: function () { return rootContainer; },
+    applyTextStyle: applyTextStyle,
+    setText: function (el, txt) { pushState(); el.textContent = txt; },
+    moveBlock: function (el, beforeEl) { pushState(); moveBlock(el, beforeEl); restoreCharts(); },
+    duplicateBlock: duplicateBlock,
+    deleteBlock: deleteBlock,
+    undo: undo,
+    redo: redo,
+    findBlock: findBlock,
+    _charts: function () { return charts; }
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+
+</script>
+<!-- ===== /html-editor 注入层 ===== -->
+</body>
+</html>

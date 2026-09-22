@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>html-editor · 把静态 HTML 变成可视化编辑器</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #f5f3ee; color: #1f2328; line-height: 1.7; padding: 32px 20px;
+  }
+  .card { max-width: 620px; width: 100%; }
+  h1 { font-size: 34px; margin: 0 0 6px; letter-spacing: -0.5px; }
+  .tag { color: #6b7280; font-size: 15px; margin: 0 0 26px; }
+  p.lead { font-size: 16px; margin: 0 0 28px; }
+  .btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
+  a.btn {
+    display: inline-block; padding: 12px 22px; border-radius: 10px; text-decoration: none;
+    font-size: 15px; font-weight: 600; transition: transform .08s ease, box-shadow .12s ease;
+  }
+  a.btn:active { transform: translateY(1px); }
+  .primary { background: #1f6f43; color: #fff; box-shadow: 0 2px 10px rgba(31,111,67,.25); }
+  .ghost { background: #fff; color: #1f2328; border: 1px solid #d7d3ca; }
+  ul { margin: 0; padding-left: 20px; font-size: 15px; color: #374151; }
+  li { margin: 6px 0; }
+  code { background: #eceae3; padding: 1px 6px; border-radius: 5px; font-size: 13.5px;
+         font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .foot { margin-top: 30px; font-size: 13px; color: #8a8f98; }
+  .foot a { color: #6b7280; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #16181c; color: #e6e6e6; }
+    .tag, ul { color: #b6bcc6; }
+    .ghost { background: #21242a; color: #e6e6e6; border-color: #33383f; }
+    code { background: #2a2e35; }
+    .primary { background: #2ea364; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>html-editor</h1>
+    <p class="tag">把任意静态 HTML 变成浏览器里的 Word 式可视化编辑器</p>
+    <p class="lead">
+      给一份静态 HTML 注入一段自包含编辑器，就能在浏览器里直接拖区块、改文字、调字体字号、
+      加粗/颜色/链接、换图、撤销重做；改完一键导出<strong>剥离了编辑器</strong>的干净 HTML。
+      零依赖、零构建、离线可用，不绑定任何 AI 宿主。
+    </p>
+    <div class="btns">
+      <a class="btn primary" href="./demo/">打开在线 Demo</a>
+      <a class="btn ghost" href="https://github.com/penguin0821/html-editor-skill">GitHub 仓库</a>
+    </div>
+    <ul>
+      <li><strong>在线 Demo</strong>：点上面的按钮，直接体验拖拽 / 改字体 / 导出（就是 <code>examples/demo.html</code> 注入编辑器后的样子）。</li>
+      <li><strong>作为技能</strong>：复制进 agent 的技能目录（QoderWork / Claude Code / Codex / Cursor 等），说一句话就能触发。见 <code>README.md</code>、<code>SKILL.md</code>、<code>AGENTS.md</code>。</li>
+      <li><strong>作为命令行</strong>：<code>pipx install .</code> 后全局可用 <code>html-editor 你的.html</code>。</li>
+      <li><strong>作为 MCP server</strong>：<code>pipx install '.[mcp]'</code>，接进任意支持 MCP 的 agent（需 Python 3.10+）。</li>
+      <li><strong>纯手动</strong>：<code>python3 assets/inject.py 你的.html</code>，双击生成的副本即可，完全不用 AI。</li>
+    </ul>
+    <p class="foot">
+      文档索引：<a href="https://github.com/penguin0821/html-editor-skill/blob/main/README.md">README</a> ·
+      <a href="https://github.com/penguin0821/html-editor-skill/blob/main/USER_GUIDE.md">使用指南</a> ·
+      <a href="https://github.com/penguin0821/html-editor-skill/blob/main/TECH_NOTES.md">技术与维护手册</a> ·
+      <a href="https://github.com/penguin0821/html-editor-skill/blob/main/CHANGELOG.md">更新日志</a>
+      <br>MIT License · v1.3.0
+    </p>
+  </div>
+</body>
+</html>

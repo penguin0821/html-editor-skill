@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "html-editor"
+version = "1.3.0"
+description = "把任意静态 HTML 变成浏览器里的可视化编辑器，改完导出剥离编辑器的干净 HTML"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "zhw" }]
+keywords = ["html", "editor", "wysiwyg", "mcp", "skill", "contenteditable"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+dependencies = []
+
+[project.optional-dependencies]
+# MCP server 封装（可选）。不装也不影响 CLI 与 skill 使用。
+# mcp 官方 SDK 要求 Python >=3.10；用环境标记约束，避免在 3.8/3.9 上安装本 extra 时报错。
+mcp = ["mcp>=1.0.0; python_version>='3.10'"]
+
+[project.scripts]
+html-editor = "html_editor.cli:main"
+
+[tool.setuptools]
+# html_editor 是代码包；html_editor.assets 通过 package-dir 映射到磁盘上的 assets/，
+# 这样 editor.js 在仓库里只有一份（真源），安装时被复制进包，不产生第二份拷贝。
+packages = ["html_editor", "html_editor.assets"]
+
+[tool.setuptools.package-dir]
+"html_editor.assets" = "assets"
+
+[tool.setuptools.package-data]
+"html_editor.assets" = ["editor.js", "inject.py"]

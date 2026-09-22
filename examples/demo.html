@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>html-editor demo · 立即试</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; margin: 0; background: #f5f5f7; color: #1d1d1f; }
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+  .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 40px 32px; border-radius: 12px; margin-bottom: 24px; }
+  .header h1 { margin: 0 0 8px; font-size: 32px; }
+  .header .subtitle { opacity: 0.9; font-size: 15px; }
+  .section { background: white; padding: 24px 28px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .section h2 { margin: 0 0 16px; font-size: 20px; color: #1d1d1f; border-left: 4px solid #667eea; padding-left: 12px; }
+  .kpi-row { display: flex; gap: 16px; }
+  .kpi { flex: 1; background: #f9f9fb; padding: 20px; border-radius: 8px; text-align: center; }
+  .kpi .num { font-size: 28px; font-weight: 600; color: #667eea; }
+  .kpi .label { font-size: 13px; color: #86868b; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e5ea; font-size: 14px; }
+  th { background: #f9f9fb; font-weight: 600; color: #424245; }
+  ul { padding-left: 20px; line-height: 1.8; }
+  .chart-wrap { height: 260px; }
+  .footer { text-align: center; color: #86868b; font-size: 13px; padding: 20px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #e8f5e9; color: #2e7d32; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>html-editor 演示报告</h1>
+    <div class="subtitle">装完 skill 后立即试这份 · 拖动区块、改文字、换字体、换图、撤销重做全都能玩</div>
+  </div>
+
+  <div class="section">
+    <h2>一、核心指标</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="num">1,234</div><div class="label">总订单数</div></div>
+      <div class="kpi"><div class="num">98.6%</div><div class="label">成功率</div></div>
+      <div class="kpi"><div class="num">42ms</div><div class="label">平均耗时</div></div>
+      <div class="kpi"><div class="num">7</div><div class="label">异常告警</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>二、趋势图（Chart.js · 拖动后自动 resize）</h2>
+    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+  </div>
+
+  <div class="section">
+    <h2>三、明细表格（每个单元格都可编辑）</h2>
+    <table>
+      <thead>
+        <tr><th>日期</th><th>渠道</th><th>订单数</th><th>状态</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2026-09-20</td><td>淘宝</td><td>312</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-20</td><td>天猫</td><td>287</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-21</td><td>淘宝</td><td>298</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-21</td><td>京东</td><td>156</td><td><span class="badge">正常</span></td></tr>
+        <tr><td>2026-09-22</td><td>拼多多</td><td>89</td><td><span class="badge">正常</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>四、要点清单（试试拖拽换位）</h2>
+    <ul>
+      <li>鼠标悬到本区块右上角，出现 ⠿ 手柄，按住拖到别处即可换位</li>
+      <li>Alt + 点击区块 = 选中，顶栏出现 ↑ ↓ 复制 删除 换图 按钮</li>
+      <li>点任何一段文字直接改，跟 Word 一样</li>
+      <li>选中一段文字，顶栏出格式化条：字体 / 字号 / 颜色 / 加粗 / 斜体 / 链接</li>
+      <li>⌘/Ctrl + Z 撤销，⌘/Ctrl + Shift + Z 重做</li>
+      <li>改完点顶栏「⬇ 导出 HTML」下载干净版本（剥掉所有编辑器痕迹）</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>五、图片区（点 🖼 换图，自动 base64 内联）</h2>
+    <p style="text-align:center; color:#86868b; padding: 40px; background:#f9f9fb; border-radius:8px;">
+      这里原本可以放一张图。选中本区块后点顶栏 🖼 按钮，选本地图片替换，<br>
+      编辑器会自动转 base64 内联，导出后不依赖任何外链。
+    </p>
+  </div>
+
+  <div class="footer">
+    html-editor v1.2.0 · MIT License · 演示用样本，随便改
+  </div>
+
+</div>
+
+<script>
+// Chart.js 趋势图（编辑器会自动捕获 config，拖动/撤销后重建）
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: ['09-16','09-17','09-18','09-19','09-20','09-21','09-22'],
+    datasets: [{
+      label: '日订单数',
+      data: [245, 312, 287, 356, 298, 412, 389],
+      borderColor: '#667eea',
+      backgroundColor: 'rgba(102,126,234,0.1)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: { y: { beginAtZero: false } }
+  }
+});
+</script>
+</body>
+</html>
