@@ -14,6 +14,8 @@
 
 ## 30 秒快速试
 
+> 换台电脑从 GitHub 下载、装成技能 / 命令行 / MCP 的完整步骤（含 Windows）见 **[INSTALL.md](INSTALL.md)**。
+
 ```bash
 # 无需安装，最省事：
 python3 assets/inject.py examples/demo.html
@@ -168,6 +170,7 @@ html-editor/
 
 ## 深入阅读
 
+- 换新电脑怎么下载安装：读 [INSTALL.md](INSTALL.md)
 - 想学会怎么用：读 [USER_GUIDE.md](USER_GUIDE.md)
 - 想搞清楚怎么实现的、后续怎么维护：读 [TECH_NOTES.md](TECH_NOTES.md)
 - 想让 agent 自动化：读 [SKILL.md](SKILL.md) 或 [AGENTS.md](AGENTS.md)
